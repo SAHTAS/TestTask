@@ -33,7 +33,7 @@ namespace DataAccess.Configurations
                 {
                     UserId = 1,
                     Login = "Admin",
-                    Password = "AQAAAAEAACcQAAAAEOD6xq4/veVRP16vgU4e/SFOU6wQZMvK2e3RLYrcYw30HD4OoqflBzP4eaOq0ufEmw===",
+                    Password = "AQAAAAEAACcQAAAAEOD6xq4/veVRP16vgU4e/SFOU6wQZMvK2e3RLYrcYw30HD4OoqflBzP4eaOq0ufEmw==",
                     CreatedDate = DateTime.UtcNow,
                     UserGroupId = 2,
                     UserStateId = 2
