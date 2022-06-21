@@ -94,7 +94,9 @@ namespace Tests
         [InlineData("NotAdmin")]
         private async void ShouldBeFailed_CreateNewUserAsync_ThrowOnTryToCreateExistingUser(string login)
         {
-            usersRepositoryMock.Setup(r => r.DoesLoginExistsAsync(login)).Returns(Task.FromResult(true));
+            usersRepositoryMock
+                .Setup(r => r.GetByLoginIncludeBlockedAsync(login))
+                .Returns<string>(l => Task.FromResult(userTestData.FirstOrDefault(u => u.Login == l)));
             await Assert.ThrowsAsync<UserAlreadyExistsException>(async () => await userService.CreateUserAsync(login, "User"));
         }
         
@@ -183,7 +185,7 @@ namespace Tests
             usersRepositoryMock.Setup(r => r.GetAsync(It.IsAny<int>())).Returns<int>(x =>
                 Task.FromResult(userTestData.FirstOrDefault(s => s.UserId == x)));
             usersRepositoryMock.Setup(r => r.GetAllAsync()).Returns(Task.FromResult(userTestData));
-            usersRepositoryMock.Setup(r => r.CreateAsync(It.IsAny<User>())).Returns<User>(user =>
+            usersRepositoryMock.Setup(r => r.CreateOrUpdateAsync(It.IsAny<User>())).Returns<User>(user =>
             {
                 user.UserId = userTestData.Count + 1;
                 userTestData.Add(user);

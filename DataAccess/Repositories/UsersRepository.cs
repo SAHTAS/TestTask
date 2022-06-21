@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain;
@@ -21,7 +22,18 @@ namespace DataAccess.Repositories
             return await context.Users
                 .AsNoTracking()
                 .Include(x => x.UserGroup)
+                .Include(x => x.UserState)
                 .Where(x => x.Login == login && x.UserState.Code == UserStateCode.Active)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<User> GetByLoginIncludeBlockedAsync(string login)
+        {
+            return await context.Users
+                .AsNoTracking()
+                .Include(x => x.UserGroup)
+                .Include(x => x.UserState)
+                .Where(x => x.Login == login)
                 .FirstOrDefaultAsync();
         }
 
@@ -52,18 +64,20 @@ namespace DataAccess.Repositories
                 .ToListAsync();
         }
 
-        public async Task CreateAsync(User user)
+        public async Task CreateOrUpdateAsync(User user)
         {
-            await context.Users.AddAsync(user);
+            context.Users.Update(user);
             await context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int userId, int blockedStateId)
+        public async Task DeleteAsync(int userId, int blockedStateId, DateTime? blockedDate)
         {
             var user = await context.Users.Where(x => x.UserId == userId).FirstOrDefaultAsync();
             if (user != null)
             {
                 user.UserStateId = blockedStateId;
+                user.BlockedDate = blockedDate;
+                user.LastUpdate = blockedDate;
                 await context.SaveChangesAsync();
             }
         }

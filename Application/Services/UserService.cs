@@ -5,6 +5,7 @@ using Core.Exceptions;
 using Core.Services;
 using DataAccess.Repositories;
 using Domain;
+using Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Services
@@ -54,7 +55,8 @@ namespace Application.Services
 
             using (locker)
             {
-                if (await usersRepository.DoesLoginExistsAsync(login))
+                var user = await usersRepository.GetByLoginIncludeBlockedAsync(login);
+                if (user != null && user.UserState.Code == UserStateCode.Active)
                     ThrowUserAlreadyExistsException(login);
 
                 await Task.Delay(TimeSpan.FromSeconds(5));
@@ -62,18 +64,22 @@ namespace Application.Services
                 var userGroupId = await userGroupsRepository.GetUserGroupIdAsync();
                 var userStateId = await userStatesRepository.GetActiveStateIdAsync();
 
-                var user = new User
+                var now = DateTime.UtcNow;
+                var newUser = new User
                 {
+                    UserId = user?.UserId ?? 0,
                     Login = login,
-                    CreatedDate = DateTime.UtcNow,
+                    CreatedDate = user?.CreatedDate ?? now,
+                    BlockedDate = user?.BlockedDate,
+                    LastUpdate = now,
                     UserGroupId = userGroupId,
                     UserStateId = userStateId
                 };
-                user.Password = passwordHasher.HashPassword(user, password);
+                newUser.Password = passwordHasher.HashPassword(newUser, password);
 
-                await usersRepository.CreateAsync(user);
-                
-                return user.UserId;
+                await usersRepository.CreateOrUpdateAsync(newUser);
+
+                return newUser.UserId;
             }
         }
 
@@ -87,7 +93,7 @@ namespace Application.Services
                 ThrowUserNotFoundException(userId);
 
             var blockedStateId = await userStatesRepository.GetBlockedStateIdAsync();
-            await usersRepository.DeleteAsync(userId, blockedStateId);
+            await usersRepository.DeleteAsync(userId, blockedStateId, DateTime.UtcNow);
         }
 
         private static void ThrowUserAlreadyExistsException(string login) =>

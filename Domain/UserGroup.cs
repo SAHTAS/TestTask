@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Domain.Enums;
-using Newtonsoft.Json;
 
 namespace Domain
 {
