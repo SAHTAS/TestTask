@@ -44,7 +44,7 @@ namespace API.Middlewares
             switch (exception)
             {
                 case UserAlreadyExistsException _:
-                    context.Response.StatusCode = (int)HttpStatusCode.OK;
+                    context.Response.StatusCode = (int)HttpStatusCode.Conflict;
                     errorResponseModel.Message = exception.Message;
                     break;
                 case UserNotFoundException _:
