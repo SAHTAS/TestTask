@@ -25,6 +25,8 @@ namespace Core.Services
             locks.TryRemove(key, out _);
         }
 
+        // Хочу оставить этот класс внутренним, чтобы сильнее связать его с LockService'ом, тем более что вне LockServic'а
+        // он не нужен. Грубо говоря, чтобы не было соблазна использовать его где-то ещё, отдельно.
         private class Lock : IDisposable
         {
             private readonly LockService lockService;
