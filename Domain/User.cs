@@ -1,5 +1,4 @@
 ﻿using System;
-using Newtonsoft.Json;
 
 namespace Domain
 {
@@ -9,6 +8,8 @@ namespace Domain
         public string Login { get; set; }
         public string Password { get; set; }
         public DateTime CreatedDate { get; set; }
+        public DateTime? BlockedDate { get; set; }
+        public DateTime? LastUpdate { get; set; }
         public int UserGroupId { get; set; }
         public int UserStateId { get; set; }
 

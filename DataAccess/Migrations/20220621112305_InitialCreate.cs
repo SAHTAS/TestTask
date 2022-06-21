@@ -44,6 +44,8 @@ namespace DataAccess.Migrations
                     Login = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BlockedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastUpdate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserGroupId = table.Column<int>(type: "int", nullable: false),
                     UserStateId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -84,13 +86,20 @@ namespace DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "UserId", "CreatedDate", "Login", "Password", "UserGroupId", "UserStateId" },
-                values: new object[] { 1, new DateTime(2022, 6, 17, 9, 59, 6, 495, DateTimeKind.Utc).AddTicks(6981), "Admin", "AQAAAAEAACcQAAAAEOD6xq4/veVRP16vgU4e/SFOU6wQZMvK2e3RLYrcYw30HD4OoqflBzP4eaOq0ufEmw===", 2, 2 });
+                columns: new[] { "UserId", "BlockedDate", "CreatedDate", "LastUpdate", "Login", "Password", "UserGroupId", "UserStateId" },
+                values: new object[] { 1, null, new DateTime(2022, 6, 21, 11, 23, 4, 644, DateTimeKind.Utc).AddTicks(986), new DateTime(2022, 6, 21, 11, 23, 4, 644, DateTimeKind.Utc).AddTicks(1470), "Admin", "AQAAAAEAACcQAAAAEOD6xq4/veVRP16vgU4e/SFOU6wQZMvK2e3RLYrcYw30HD4OoqflBzP4eaOq0ufEmw==", 2, 2 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserGroups_Code",
+                table: "UserGroups",
+                column: "Code",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Login",
                 table: "Users",
-                column: "Login");
+                column: "Login",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_UserGroupId",
@@ -101,6 +110,12 @@ namespace DataAccess.Migrations
                 name: "IX_Users_UserStateId",
                 table: "Users",
                 column: "UserStateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserStates_Code",
+                table: "UserStates",
+                column: "Code",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

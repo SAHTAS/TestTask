@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220617095907_InitialCreate")]
+    [Migration("20220621112305_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,7 +28,13 @@ namespace DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime?>("BlockedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastUpdate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Login")
@@ -47,7 +53,8 @@ namespace DataAccess.Migrations
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("Login");
+                    b.HasIndex("Login")
+                        .IsUnique();
 
                     b.HasIndex("UserGroupId");
 
@@ -59,9 +66,10 @@ namespace DataAccess.Migrations
                         new
                         {
                             UserId = 1,
-                            CreatedDate = new DateTime(2022, 6, 17, 9, 59, 6, 495, DateTimeKind.Utc).AddTicks(6981),
+                            CreatedDate = new DateTime(2022, 6, 21, 11, 23, 4, 644, DateTimeKind.Utc).AddTicks(986),
+                            LastUpdate = new DateTime(2022, 6, 21, 11, 23, 4, 644, DateTimeKind.Utc).AddTicks(1470),
                             Login = "Admin",
-                            Password = "AQAAAAEAACcQAAAAEOD6xq4/veVRP16vgU4e/SFOU6wQZMvK2e3RLYrcYw30HD4OoqflBzP4eaOq0ufEmw===",
+                            Password = "AQAAAAEAACcQAAAAEOD6xq4/veVRP16vgU4e/SFOU6wQZMvK2e3RLYrcYw30HD4OoqflBzP4eaOq0ufEmw==",
                             UserGroupId = 2,
                             UserStateId = 2
                         });
@@ -81,6 +89,9 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserGroupId");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
 
                     b.ToTable("UserGroups");
 
@@ -113,6 +124,9 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserStateId");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
 
                     b.ToTable("UserStates");
 

@@ -13,6 +13,7 @@ namespace DataAccess.Configurations
 
             builder.HasKey(x => x.UserStateId);
             builder.Property(x => x.Code).IsRequired();
+            builder.HasIndex(x => x.Code).IsUnique();
             builder.Property(x => x.Description).IsRequired(false);
 
             builder.HasData
