@@ -10,7 +10,6 @@ namespace Domain
         public UserGroupCode Code { get; set; }
         public string Description { get; set; }
 
-        [JsonIgnore]
         public List<User> Users { get; set; }
     }
 }

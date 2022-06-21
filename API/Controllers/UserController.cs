@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using API.Helpers;
 using API.Models;
 using Application.Services;
@@ -22,20 +23,20 @@ namespace API.Controllers
 
         [Authorize]
         [HttpGet("{userId:int}")]
-        public async Task<ActionResult<User>> Get(int userId)
+        public async Task<ActionResult<GetUserResponseModel>> Get(int userId)
         {
             var user = await userService.GetUserAsync(userId);
-
-            return new JsonResult(user);
+            
+            return new JsonResult(BuildGetUserResponseModel(user));
         }
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<User>> Get()
+        public async Task<ActionResult<GetUserResponseModel>> Get()
         {
             var users = await userService.GetAllUsersAsync();
 
-            return new JsonResult(users);
+            return new JsonResult(users.Select(BuildGetUserResponseModel));
         }
 
         [Authorize(Roles = UserRoles.Admin)]
@@ -54,6 +55,31 @@ namespace API.Controllers
             await userService.DeleteUserAsync(userId);
 
             return Ok();
+        }
+
+        // TODO: Use a better mapping technique
+        private GetUserResponseModel BuildGetUserResponseModel(User user)
+        {
+            return new GetUserResponseModel
+            {
+                UserId = user.UserId,
+                Login = user.Login,
+                CreatedDate = user.CreatedDate,
+                UserGroupId = user.UserGroupId,
+                UserStateId = user.UserStateId,
+                UserGroup = new UserGroupResponseModel
+                {
+                    UserGroupId = user.UserGroup.UserGroupId,
+                    Code = user.UserGroup.Code.ToString(),
+                    Description = user.UserGroup.Description
+                },
+                UserState = new UserStateResponseModel
+                {
+                    UserStateId = user.UserState.UserStateId,
+                    Code = user.UserState.Code.ToString(),
+                    Description = user.UserState.Description
+                }
+            };
         }
     }
 }

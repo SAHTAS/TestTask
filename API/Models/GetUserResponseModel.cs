@@ -1,18 +1,17 @@
 ﻿using System;
-using Newtonsoft.Json;
 
-namespace Domain
+namespace API.Models
 {
-    public class User
+    public class GetUserResponseModel
     {
         public int UserId { get; set; }
         public string Login { get; set; }
-        public string Password { get; set; }
+
         public DateTime CreatedDate { get; set; }
         public int UserGroupId { get; set; }
         public int UserStateId { get; set; }
 
-        public UserGroup UserGroup { get; set; }
-        public UserState UserState { get; set; }
+        public UserGroupResponseModel UserGroup { get; set; }
+        public UserStateResponseModel UserState { get; set; }
     }
 }
