@@ -75,7 +75,8 @@ namespace API.Extensions
                     In = ParameterLocation.Header,
                     Description = "Authorize with JWT",
                     Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer"
                 });
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
