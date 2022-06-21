@@ -5,11 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories
 {
-    public interface IUserGroupsRepository
-    {
-        public Task<int> GetUserGroupIdAsync();
-    }
-    
     public class UserGroupsRepository : IUserGroupsRepository
     {
         private readonly IDataContext context;

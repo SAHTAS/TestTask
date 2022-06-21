@@ -3,11 +3,6 @@ using System.Collections.Concurrent;
 
 namespace Core.Services
 {
-    public interface ILockService
-    {
-        public bool TryLock(string key, out IDisposable locker);
-    }
-
     public class LockService : ILockService
     {
         private readonly ConcurrentDictionary<string, Lock> locks = new ConcurrentDictionary<string, Lock>();

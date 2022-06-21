@@ -12,11 +12,6 @@ using Microsoft.Extensions.Options;
 
 namespace API.Services
 {
-    public interface ILoginService
-    {
-        public Task<string> GenerateTokenAsync(string login, string password);
-    }
-
     public class LoginService : ILoginService
     {
         private readonly IUsersRepository usersRepository;

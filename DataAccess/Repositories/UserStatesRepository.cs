@@ -5,13 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories
 {
-    public interface IUserStatesRepository
-    {
-        public Task<int> GetActiveStateIdAsync();
-
-        public Task<int> GetBlockedStateIdAsync();
-    }
-    
     public class UserStatesRepository : IUserStatesRepository
     {
         private readonly IDataContext context;
